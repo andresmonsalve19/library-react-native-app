@@ -6,25 +6,36 @@ import {
     Image,
     TouchableWithoutFeedback,
 } from "react-native";
-import Constants from "expo-constants";
-import {Link} from "react-router-native";
+import {Link, useLocation} from "react-router-native";
 
-const AppBarTab = ({active, to, uri}) => {
+const AppBarTab = ({active, to, icon}) => {
+    const {pathname} = useLocation();
+    const iconActive = pathname === to ? active : icon;
     return (
-        <Link to={to}>
+        <Link to={to} component={TouchableWithoutFeedback}>
             <Image
                 style={styles.logo}
-                source={uri}
+                source={iconActive}
             />
         </Link>
     );
     
 };
+
+const getIconActive = (path) => {
+    if (path === "/") {
+        return require("../../assets/home-active.png");
+    } 
+    else if (path=== "/map") {
+        return require("../../assets/map-active.png");
+    }
+}
+
 const NavBar = () => {
     return (
         <View style={styles.container}>
-            <AppBarTab active to="/" uri={require("../../assets/home.png")} />
-            <AppBarTab active to="/map" uri={require("../../assets/map.png")} />
+            <AppBarTab active={getIconActive("/")} to="/" icon={require("../../assets/home.png")} />
+            <AppBarTab active={getIconActive("/map")} to="/map" icon={require("../../assets/map.png")} />
         </View>
     );
 };
